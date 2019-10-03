@@ -40,6 +40,7 @@ class TETRIS
             m=a;
             n=b;
             data=c;
+            int **row;
 
         }
         void show_data()
@@ -47,6 +48,23 @@ class TETRIS
             cout<<m<<" "<<n<<endl;
             for(int i=0;i<10;i++){
                 cout<<data[i].getblock()<<" "<<data[i].getstart_col()<<endl;
+            }
+        }
+        void setmatrix()
+        {
+            row=new int*;
+            for(int i=0;i<m;i++){
+              row[i]=new int [n];
+            }
+
+        }
+        void showmatrix()
+        {
+            for(int i=0;i<m;i++){
+                for(int j=0;j<n;j++){
+                    cout << row[i][j] << " ";
+                }
+                cout << endl;
             }
         }
 
@@ -61,7 +79,7 @@ int main()
     block_data *data;
     int m,n,i=0;
     ifstream test_case;
-    test_case.open("C:\\Users\\ACER\\Desktop\\�굲\\project1\\tetris.data.txt",ios::in);
+    test_case.open("C:\\Users\\ACER\\Desktop\\�굲\\project1\\tetris.data.txt",ios::in);
     if(!test_case){
         cout<<"error";
     }
@@ -80,7 +98,8 @@ int main()
     test_case.close();
     TETRIS block(m,n,data);
     block.show_data();
-    cout <<"1";
+    block.setmatrix();
+    block.showmatrix();
     delete []data;
 
 
