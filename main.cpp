@@ -80,6 +80,7 @@ int main()
     test_case.close();
     TETRIS block(m,n,data);
     block.show_data();
+    cout <<"1";
     delete []data;
 
 
