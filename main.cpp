@@ -2,12 +2,18 @@
 #include <fstream>
 #include <string>
 using namespace std;
-
+typedef struct shape
+{
+    int r,c;
+}SHAPE;
 class block_data
 {
     private:
         string block;
         int start_col;
+        SHAPE shape[4];
+        SHAPE det[4];
+        
     public:
         string getblock()
         {
@@ -17,15 +23,112 @@ class block_data
         {
             return start_col;
         }
-        void setblock(const string a)
+        void setblock( string &a , int &b)
         {
             block=a;
+            start_col=b-1;
+            for(int i=0;i<4;i++) det[i]={-1,-1};
+            if(block[0]=='T'){
+                if(block[1]=='1'){
+                    shape[0]={0,1};shape[1]={1,0};shape[2]={1,1};shape[3]={1,2};   
+                    det[0]={0,1};det[1]={1,0};det[2]={1,2};
+                }
+                else if(block[1]=='2'){
+                    shape[0]={0,1};shape[1]={1,0};shape[2]={1,1};shape[3]={2,1};  
+                    det[0]={0,1};det[1]={1,0};             
+                }
+                else if(block[1]=='3'){
+                    shape[0]={0,0};shape[1]={0,1};shape[2]={0,2};shape[3]={1,1};
+                    det[0]={0,0};det[1]={0,1};det[2]={0,2};      
+                }
+                else if(block[1]=='4'){
+                    shape[0]={0,0};shape[1]={1,0};shape[2]={1,1};shape[3]={2,0};
+                    det[0]={0,0};det[1]={1,1};
+                }
+            }
+            else if(block[0]=='L'){
+                if(block[1]=='1'){
+                    shape[0]={0,0};shape[1]={0,1};shape[2]={1,0};shape[3]={2,0};   
+                    det[0]={0,0};det[1]={0,1};
+                }
+                else if(block[1]=='2'){
+                    shape[0]={0,0};shape[1]={1,0};shape[2]={1,1};shape[3]={1,2};  
+                    det[0]={0,0};det[1]={1,1};det[2]={1,2};         
+                }
+                else if(block[1]=='3'){
+                    shape[0]={0,1};shape[1]={1,1};shape[2]={2,0};shape[3]={2,1};
+                    det[0]={0,1};det[1]={2,0};      
+                }
+                else if(block[1]=='4'){
+                    shape[0]={0,0};shape[1]={0,1};shape[2]={0,2};shape[3]={1,2};
+                    det[0]={0,0};det[1]={0,1};det[2]={0,2};
+                }
+            }
+            else if(block[0]=='J'){
+                if(block[1]=='1'){
+                    shape[0]={0,0};shape[1]={0,1};shape[2]={1,1};shape[3]={2,1};   
+                    det[0]={0,0};det[1]={0,1};
+                }
+                else if(block[1]=='2'){
+                    shape[0]={0,0};shape[1]={0,1};shape[2]={0,2};shape[3]={1,0};  
+                    det[0]={0,0};det[1]={0,1};det[2]={0,2};         
+                }
+                else if(block[1]=='3'){
+                    shape[0]={0,0};shape[1]={1,0};shape[2]={2,0};shape[3]={2,1};
+                    det[0]={0,0};det[1]={2,1};      
+                }
+                else if(block[1]=='4'){
+                    shape[0]={0,2};shape[1]={1,0};shape[2]={1,1};shape[3]={1,2};
+                    det[0]={0,2};det[1]={1,0};det[2]={1,1};
+                }
+            }
+            else if(block[0]=='S'){
+                if(block[1]=='1'){
+                    shape[0]={0,0};shape[1]={0,1};shape[2]={1,1};shape[3]={1,2};   
+                    det[0]={0,0};det[1]={0,1};det[2]={1,2};
+                }
+                else if(block[1]=='2'){
+                    shape[0]={0,1};shape[1]={1,0};shape[2]={1,1};shape[3]={2,0};  
+                    det[0]={0,1};det[1]={1,0};         
+                }
+            }
+            else if(block[0]=='Z'){
+                if(block[1]=='1'){
+                    shape[0]={0,1};shape[1]={0,2};shape[2]={1,0};shape[3]={1,1};   
+                    det[0]={0,1};det[1]={0,2};det[2]={1,0};
+                }
+                else if(block[1]=='2'){
+                    shape[0]={0,0};shape[1]={1,0};shape[2]={1,1};shape[3]={2,1};  
+                    det[0]={0,0};det[1]={1,1};         
+                }
+            }
+            else if(block[0]=='I'){
+                if(block[1]=='1'){
+                    shape[0]={0,0};shape[1]={1,0};shape[2]={2,0};shape[3]={3,0};   
+                    det[0]={0,0};
+                    for(int i=0;i<3;i++)cout<<det[i].r<<" "<<det[i].c;
+                }
+                else if(block[1]=='2'){
+                    shape[0]={0,0};shape[1]={0,1};shape[2]={0,2};shape[3]={0,3};  
+                    det[0]={0,0};det[1]={0,1};det[2]={0,2};det[3]={0,3};     
+                }
+            }
+            else if(block[0]=='O'){
+                shape[0]={0,0};shape[1]={0,1};shape[2]={1,0};shape[3]={1,1};  
+                det[0]={0,0};det[1]={0,1};  
+            }
+
+        }
+        SHAPE getdet(int i)
+        {
+            return det[i];
+        }
+        SHAPE getshape(int i)
+        {
+            return shape[i];
         }
 
-        void setstart_col(const int a)
-        {
-            start_col=a;
-        }
+
 };
 
 class TETRIS
@@ -33,9 +136,11 @@ class TETRIS
     private:
         int m,n;
         block_data *data;
+        int **row;
     public:
         TETRIS(int a,int b,block_data *c)
         {
+            
             data = new block_data[1000];
             m=a;
             n=b;
@@ -47,11 +152,74 @@ class TETRIS
             cout<<m<<" "<<n<<endl;
             for(int i=0;i<10;i++){
                 cout<<data[i].getblock()<<" "<<data[i].getstart_col()<<endl;
+            }   
+        }
+        void settetris()
+        {
+
+            row = new int*;
+            for(int i=0;i<m;i++)
+                row[i] = new int[n];
+            for(int i=0;i<m;i++){
+                for(int j=0;j<n;j++){
+                    *(*row+i*m+j)=0;
+                }
+            }           
+        }
+        void showtetris()
+        {
+           
+            for(int i=m-1;i>=0;i--){
+                for(int j=0;j<n;j++){
+                    cout << *((*row+i*m)+j) << " ";
+                }
+                cout << endl;
             }
         }
-
-
-
+        void test()
+        {
+            cout << data[0].getdet(0).r<<endl;
+            if(data[0].getdet(0).r==-1){
+                cout <<"aaa"<<endl;
+            }
+            else cout <<"bbb"<<endl;
+        }
+        bool putblock( block_data &block)
+        {
+            int touch=0;
+            int b=0;
+            for(int i=m-1;i>=0&&touch!=1;i--){
+                touch=0;b=0;
+                for(int j=0;j<4;j++){
+                    if(block.getdet(j).r!=-1){   
+                        int r=i+block.getdet(j).r;
+                        int c=block.getstart_col()+block.getdet(j).c;
+                        if(r<m){
+                            if(*(*row+r*m+c)==1){
+                                touch=1;
+                            }   
+                        }
+                        else if(r>=m){
+                            b++;
+                        }
+                    }
+                }
+                if(touch==1){                  
+                    for(int k=0;k<4;k++){
+                        int rr=(i+1)+block.getshape(k).r;
+                        int cc=block.getstart_col()+block.getshape(k).c;
+                        *(*row+rr*m+cc)=1;
+                    }
+                }
+                else if(i==0&&touch==0){
+                    for(int k=0;k<4;k++){
+                        int rr=i+block.getshape(k).r;
+                        int cc=block.getstart_col()+block.getshape(k).c;
+                        *(*row+rr*m+cc)=1;
+                    }
+                }     
+            }
+        }
 
 };
 
@@ -61,7 +229,7 @@ int main()
     block_data *data;
     int m,n,i=0;
     ifstream test_case;
-    test_case.open("C:\\Users\\ACER\\Desktop\\¸êµ²\\project1\\tetris.data.txt",ios::in);
+    test_case.open("C:\\Users\\ACER\\Desktop\\datastructure\\project1\\Tetris\\tetris.data.txt",ios::in);
     if(!test_case){
         cout<<"error";
     }
@@ -72,15 +240,32 @@ int main()
         int b;
         test_case >> a >> b;
         if(a!="End"){
-            data[i].setblock(a);
-            data[i].setstart_col(b);
+            data[i].setblock(a,b);
             i++;
         }
     }
     test_case.close();
-    TETRIS block(m,n,data);
-    block.show_data();
-    cout <<"1";
+    TETRIS tetris(m,n,data);
+    tetris.show_data();
+    tetris.settetris();
+    tetris.showtetris();
+    tetris.test();
+
+    tetris.putblock(data[0]);
+    tetris.showtetris();
+    cout << endl;
+
+    tetris.putblock(data[1]);
+    tetris.showtetris();
+    cout << endl;
+
+    tetris.putblock(data[2]);
+    tetris.showtetris();
+    cout << endl;
+
+    tetris.putblock(data[3]);
+    tetris.showtetris();
+    cout << endl;
     delete []data;
 
 
