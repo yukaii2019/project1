@@ -270,36 +270,36 @@ class TETRIS
                     }
                     if(row_delete[0]!=-1){
                         int isdeleterow=0;
-                        int pos=1;
-                        int **new_matrix;
-                        // new_matrix= new int*;
-                        // for(int k=0;k<m;k++){
-                        //     new_matrix[k]= new int[n];
-                        // }
-                        // for(int k=0;k<m;k++){
-                        //     isdeleterow=0;
-                        //     for(int l=0;l<4;l++){
-                        //         if(row_delete[l]!=-1){
-                        //             if(k==row_delete[l]) isdeleterow=1;
-                        //         }
-                        //     }
-                        //     if(!isdeleterow){
-                        //         new_matrix[pos]=row[k];
-                        //         pos++;
-                        //     }
-                        // }
-                        // for(int l=pos;l<m;l++){
-                        //     for(int k=0;k<n;k++)
-                        //         *(*new_matrix+l*m+k)=0;
-                        // }
+                        int pos=0;
+                        int new_matrix[m][n];
+                        for(int k=0;k<m;k++){
+                            isdeleterow=0;
+                            for(int l=0;l<4;l++){
+                                if(row_delete[l]!=-1){
+                                    if(k==row_delete[l]) isdeleterow=1;
+                                }
+                            }
+                            if(!isdeleterow){
+                                for(int l=0;l<n;l++){
+                                    new_matrix[pos][l]=*(*row+k*m+l);
+                                }
+                                pos++;                            
+                            }
+                        }
+                        for(int l=pos;l<m;l++){
+                            for(int k=0;k<n;k++)
+                                new_matrix[l][k]=0;
+                        }
                         // for(int i=m-1;i>=0;i--){
                         //     for(int j=0;j<n;j++){
-                        //         cout << *((*new_matrix+i*m)+j) << " ";
+                        //         cout << new_matrix[i][j]<< " ";
                         //     }
                         //     cout << endl;
                         //  }
-                        // for(int k=0;k<m;k++)
-                        //     row[k] = new_matrix[k];
+                        for(int k=0;k<m;k++)
+                            for(int l=0;l<n;l++){
+                                *(*row+k*m+l) = new_matrix[k][l];
+                            }
                         // for(int k=0;k<m;k++)
                         //     delete[] new_matrix[k];
                         // delete [] new_matrix;
