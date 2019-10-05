@@ -160,6 +160,7 @@ class TETRIS
         int m,n;
         block_data *data;
         int **row;
+        int num_of_data;
     public:
         TETRIS(int a,int b,block_data *c)
         {
@@ -173,7 +174,7 @@ class TETRIS
         void show_data()
         {
             cout<<m<<" "<<n<<endl;
-            for(int i=0;i<10;i++){
+            for(int i=0;i<num_of_data;i++){
                 cout<<data[i].getblock()<<" "<<data[i].getstart_col()<<endl;
             }   
         }
@@ -198,14 +199,6 @@ class TETRIS
                 }
                 cout << endl;
             }
-        }
-        void test()
-        {
-            cout << data[0].getdet(0).r<<endl;
-            if(data[0].getdet(0).r==-1){
-                cout <<"aaa"<<endl;
-            }
-            else cout <<"bbb"<<endl;
         }
         bool putblock( block_data &block)
         {
@@ -265,8 +258,10 @@ class TETRIS
                         for(int p=0;p<n;p++){
                             if(*(*row+k*m+p)==1)numofone++;             
                         }
-                        if(numofone==n)row_delete[pos]=k;
-                        pos++;
+                        if(numofone==n){
+                            row_delete[pos]=k;
+                            pos++;
+                        }
                     }
                     if(row_delete[0]!=-1){
                         int isdeleterow=0;
@@ -308,6 +303,15 @@ class TETRIS
 
                     
             }
+            return 0;
+        }
+        void setnum_of_data(int a)
+        {
+            num_of_data=a;
+        }
+        int getnum_of_data()
+        {
+            return num_of_data;
         }
 
 };
@@ -316,7 +320,7 @@ class TETRIS
 int main()
 {
     block_data *data;
-    int m,n,i=0;
+    int m,n,i=0,GAMEOVER=0;
     ifstream test_case;
     test_case.open("C:\\Users\\ACER\\Desktop\\datastructure\\project1\\Tetris\\tetris.data.txt",ios::in);
     if(!test_case){
@@ -335,26 +339,15 @@ int main()
     }
     test_case.close();
     TETRIS tetris(m,n,data);
+    tetris.setnum_of_data(i);
     tetris.show_data();
     tetris.settetris();
-    tetris.showtetris();
-    tetris.test();
 
-    tetris.putblock(data[0]);
-    tetris.showtetris();
-    cout << endl;
-
-    tetris.putblock(data[1]);
-    tetris.showtetris();
-    cout << endl;
-
-    tetris.putblock(data[2]);
-    tetris.showtetris();
-    cout << endl;
-
-    tetris.putblock(data[3]);
-    tetris.showtetris();
-    cout << endl;
+    for(int i=0;i<tetris.getnum_of_data()&&GAMEOVER==0;i++){
+        GAMEOVER=tetris.putblock(data[i]);
+        tetris.showtetris();
+        cout << endl;
+    }
     delete []data;
 
 
