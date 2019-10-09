@@ -159,7 +159,7 @@ class TETRIS
     private:
         int m,n;
         block_data *data;
-        int **row;
+        int *row;
         int num_of_data;
     public:
         TETRIS(int a,int b,block_data *c)
@@ -181,24 +181,20 @@ class TETRIS
         void settetris()
         {
 
-            row = new int*;
-            for(int i=0;i<m;i++)
-                row[i] = new int[n];
-            for(int i=0;i<m;i++){
-                for(int j=0;j<n;j++){
-                    *(*row+i*m+j)=0;
-                }
-            }           
+            row = new int[m*n];
+            for(int i=0;i<m*n;i++){
+                *(row+i)=0;
+            }  
         }
         void showtetris()
         {
            
-            for(int i=m-1;i>=0;i--){
+           for(int i=m-1;i>=0;i--){
                 for(int j=0;j<n;j++){
-                    cout << *((*row+i*m)+j) << " ";
+                    cout << *(row+i*n+j);
                 }
                 cout << endl;
-            }
+                }      
         }
         bool putblock( block_data &block)
         {
@@ -214,7 +210,7 @@ class TETRIS
                         int r=i+block.getdet(j).r;
                         int c=block.getstart_col()+block.getdet(j).c;
                         if(r<m){
-                            if(*(*row+r*m+c)==1){
+                            if(*(row+r*n+c)==1){
                                 touch=1;
                             }   
                         }
@@ -234,7 +230,7 @@ class TETRIS
                     for(int k=0;k<4;k++){
                         int rr=puttingrow+block.getshape(k).r;
                         int cc=block.getstart_col()+block.getshape(k).c;
-                        *(*row+rr*m+cc)=1;
+                        *(row+rr*n+cc)=1;
                     }
                     beenputsafely=1;
                 }
@@ -243,7 +239,7 @@ class TETRIS
                         int rr=puttingrow+block.getshape(k).r;
                         int cc=block.getstart_col()+block.getshape(k).c;
                         if(rr<m)
-                        *(*row+rr*m+cc)=1;
+                        *(row+rr*n+cc)=1;
                     }
                     return 1;
                 } 
@@ -256,7 +252,7 @@ class TETRIS
                     for(int k=puttingrow;k<puttingrow+block.gettall();k++){
                         numofone=0;
                         for(int p=0;p<n;p++){
-                            if(*(*row+k*m+p)==1)numofone++;             
+                            if(*(row+k*n+p)==1)numofone++;             
                         }
                         if(numofone==n){
                             row_delete[pos]=k;
@@ -266,7 +262,8 @@ class TETRIS
                     if(row_delete[0]!=-1){
                         int isdeleterow=0;
                         int pos=0;
-                        int new_matrix[m][n];
+                        int *new_matrix;
+                        new_matrix = new int [m*n];
                         for(int k=0;k<m;k++){
                             isdeleterow=0;
                             for(int l=0;l<4;l++){
@@ -276,28 +273,17 @@ class TETRIS
                             }
                             if(!isdeleterow){
                                 for(int l=0;l<n;l++){
-                                    new_matrix[pos][l]=*(*row+k*m+l);
+                                    *(new_matrix+pos*n+l)=*(row+k*n+l);
                                 }
                                 pos++;                            
                             }
                         }
                         for(int l=pos;l<m;l++){
                             for(int k=0;k<n;k++)
-                                new_matrix[l][k]=0;
+                                *(new_matrix+l*n+k)=0;
                         }
-                        // for(int i=m-1;i>=0;i--){
-                        //     for(int j=0;j<n;j++){
-                        //         cout << new_matrix[i][j]<< " ";
-                        //     }
-                        //     cout << endl;
-                        //  }
-                        for(int k=0;k<m;k++)
-                            for(int l=0;l<n;l++){
-                                *(*row+k*m+l) = new_matrix[k][l];
-                            }
-                        // for(int k=0;k<m;k++)
-                        //     delete[] new_matrix[k];
-                        // delete [] new_matrix;
+                        delete [] row;
+                        row = new_matrix;
                     }
                 }
 
@@ -313,6 +299,22 @@ class TETRIS
         {
             return num_of_data;
         }
+        void write()
+        {
+            fstream opfile;
+            opfile.open("tetris.final",ios::out);
+            if(!opfile){
+                cout << "error";
+            }
+            for(int i=m-1;i>=0;i--){
+                for(int j=0;j<n;j++){
+                    opfile << *(row+i*n+j);
+                }
+                opfile << endl;
+                }   
+            opfile.close();   
+            
+        }
 
 };
 
@@ -322,7 +324,7 @@ int main()
     block_data *data;
     int m,n,i=0,GAMEOVER=0;
     ifstream test_case;
-    test_case.open("C:\\Users\\ACER\\Desktop\\datastructure\\project1\\Tetris\\tetris.data.txt",ios::in);
+    test_case.open("tetris.data",ios::in);
     if(!test_case){
         cout<<"error";
     }
@@ -348,6 +350,9 @@ int main()
         tetris.showtetris();
         cout << endl;
     }
+    tetris.write();
+    
+    
     delete []data;
 
 
