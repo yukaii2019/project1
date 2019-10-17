@@ -389,7 +389,7 @@ class TETRIS
         void write()
         {
             fstream opfile;
-            opfile.open("Tetris.output",ios::out);
+            opfile.open("Tetris.final",ios::out);
             if(!opfile){
                 cout << "error";
             }
